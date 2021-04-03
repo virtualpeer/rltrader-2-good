@@ -23,6 +23,36 @@
 - [Anaconda 3.7+](https://www.anaconda.com/distribution/)
 - [TensorFlow 1.15.2](https://www.tensorflow.org/)
   - `pip install tensorflow==1.15.2`
+  - `pip install tensorflow-gpu==1.15.2`
 - [plaidML](https://plaidml.github.io/plaidml/)
   - `pip install plaidml-keras==0.6.2`
   - `pip install mplfinance`
+
+# conda 환경
+
+## TF 1.15
+
+> TF 1.15 사용을 위해서 Python 3.6을 설치한다.
+> TF 1.15 사용할 경우 cuda 10.0, cudnn 7.4.2 (7.3.1) 설치해야 한다.
+> https://www.tensorflow.org/install/source#tested_build_configurations
+> https://github.com/tensorflow/models/issues/9706
+
+conda create -n rltrader python=3.6
+conda activate rltrader
+pip install tensorflow-gpu==1.15
+conda install cudatoolkit=10.0
+conda install cudnn=7.3.1
+pip install numpy
+pip install pandas
+
+### TF 2.4.1
+conda create -n rltrader2 python=3.6
+conda activate rltrader2
+pip install tensorflow==2.4.1
+
+## Troubleshooting
+
+- TF 1.15에서 다음 에러가 나면 Python 3.6으로 맞춰준다.
+```
+NotImplementedError: Cannot convert a symbolic Tensor (lstm/strided_slice:0) to a numpy array.
+```
