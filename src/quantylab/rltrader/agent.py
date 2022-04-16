@@ -4,7 +4,7 @@ from quantylab.rltrader import utils
 
 class Agent:
     # 에이전트 상태가 구성하는 값 개수
-    # 주식 보유 비율, 현재 손익, 평균 매수 단가 대비 등락률
+    # 주식 보유 비율, 손익률, 주당 매수 단가 대비 주가 등락률
     STATE_DIM = 3
 
     # 매매 수수료 및 세금
@@ -42,7 +42,7 @@ class Agent:
 
         # Agent 클래스의 상태
         self.ratio_hold = 0  # 주식 보유 비율
-        self.profitloss = 0  # 현재 손익
+        self.profitloss = 0  # 손익률
         self.avg_buy_price = 0  # 주당 매수 단가
 
     def reset(self):

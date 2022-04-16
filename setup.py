@@ -7,5 +7,6 @@ setup(
     author='Quantylab',
     author_email='quantylab@gmail.com',
     url='https://github.com/quantylab/rltrader',
-    packages=find_namespace_packages(include=['quantylab.*']),
+    packages=find_namespace_packages(where='src', include=['quantylab.*']),
+    package_dir={'': 'src'},
 )

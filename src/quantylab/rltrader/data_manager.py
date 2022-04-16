@@ -212,7 +212,7 @@ def load_data(code, date_from, date_to, ver='v2'):
     else:
         raise Exception('Invalid version.')
     
-    return chart_data, training_data
+    return chart_data, training_data.values
 
 
 def load_data_v3_v4(code, date_from, date_to, ver):
@@ -243,18 +243,35 @@ def load_data_v3_v4(code, date_from, date_to, ver):
     # 날짜 오름차순 정렬
     df = df.sort_values(by='date').reset_index(drop=True)
 
+    # NaN 처리
+    df = df.fillna(method='ffill').fillna(method='bfill').reset_index(drop=True)
+    df = df.fillna(0)
+
     # 기간 필터링
     df['date'] = df['date'].str.replace('-', '')
     df = df[(df['date'] >= date_from) & (df['date'] <= date_to)]
-    df = df.fillna(method='ffill').reset_index(drop=True)
+    df = df.reset_index(drop=True)
 
     # 데이터 조정
-    df.loc[:, ['per', 'pbr', 'roe']] = df[['per', 'pbr', 'roe']].apply(lambda x: x / 100)
+    # df.loc[:, ['per', 'pbr', 'roe']] = df[['per', 'pbr', 'roe']].apply(lambda x: x / 100)
 
     # 차트 데이터 분리
     chart_data = df[COLUMNS_CHART_DATA]
 
     # 학습 데이터 분리
-    training_data = df[columns]
+    training_data = df[columns].values
+
+    # 스케일링
+    from sklearn.preprocessing import RobustScaler
+    from joblib import dump, load
+    scaler_path = os.path.join(settings.BASE_DIR, 'scalers', f'scaler_{ver}.joblib')
+    scaler = None
+    if not os.path.exists(scaler_path):
+        scaler = RobustScaler()
+        scaler.fit(training_data)
+        dump(scaler, scaler_path)
+    else:
+        scaler = load(scaler_path)
+    training_data = scaler.transform(training_data)
 
     return chart_data, training_data
