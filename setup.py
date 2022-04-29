@@ -18,7 +18,5 @@ setup(
         'sklearn',
         'tensorflow==2.7.0',
         'torch==1.10.1',
-        'torchvision==1.10.1',
-        'torchaudio==1.10.1',
     ]
 )
