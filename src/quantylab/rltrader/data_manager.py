@@ -253,7 +253,8 @@ def load_data_v3_v4(code, date_from, date_to, ver):
     df = df.reset_index(drop=True)
 
     # 데이터 조정
-    # df.loc[:, ['per', 'pbr', 'roe']] = df[['per', 'pbr', 'roe']].apply(lambda x: x / 100)
+    if ver == 'v3':
+        df.loc[:, ['per', 'pbr', 'roe']] = df[['per', 'pbr', 'roe']].apply(lambda x: x / 100)
 
     # 차트 데이터 분리
     chart_data = df[COLUMNS_CHART_DATA]
@@ -262,16 +263,17 @@ def load_data_v3_v4(code, date_from, date_to, ver):
     training_data = df[columns].values
 
     # 스케일링
-    from sklearn.preprocessing import RobustScaler
-    from joblib import dump, load
-    scaler_path = os.path.join(settings.BASE_DIR, 'scalers', f'scaler_{ver}.joblib')
-    scaler = None
-    if not os.path.exists(scaler_path):
-        scaler = RobustScaler()
-        scaler.fit(training_data)
-        dump(scaler, scaler_path)
-    else:
-        scaler = load(scaler_path)
-    training_data = scaler.transform(training_data)
+    if ver == 'v4':
+        from sklearn.preprocessing import RobustScaler
+        from joblib import dump, load
+        scaler_path = os.path.join(settings.BASE_DIR, 'scalers', f'scaler_{ver}.joblib')
+        scaler = None
+        if not os.path.exists(scaler_path):
+            scaler = RobustScaler()
+            scaler.fit(training_data)
+            dump(scaler, scaler_path)
+        else:
+            scaler = load(scaler_path)
+        training_data = scaler.transform(training_data)
 
     return chart_data, training_data
