@@ -363,9 +363,8 @@ class ReinforcementLearner:
                 pred_policy = self.policy_network.predict(list(q_sample))
             
             # 신경망에 의한 행동 결정
-            action, confidence, _ = self.agent.decide_action(pred_value, pred_policy, 0)
-            result.append((self.environment.observation[0], int(action), float(confidence)))
-
+            result.append((self.environment.observation[0], pred_value, pred_policy))
+            
         if self.gen_output:
             with open(os.path.join(self.output_path, f'pred_{self.stock_code}.json'), 'w') as f:
                 print(json.dumps(result), file=f)
